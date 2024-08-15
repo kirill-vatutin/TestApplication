@@ -1,3 +1,6 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using TestApplication.Infrastructure.Repositories;
 using TestApplication.Infrastucture;
 
 
@@ -11,8 +14,11 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddScoped<ApplicationDbContext>();
-
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+{
+    options.UseNpgsql(builder.Configuration.GetConnectionString("Database")); 
+});
+builder.Services.AddScoped<IItemRepository,ItemRepository>();
 var app = builder.Build();
 
 

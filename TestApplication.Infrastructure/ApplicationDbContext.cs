@@ -1,24 +1,27 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using TestApplication.Domain.Models;
+using TestApplication.Domain.Shared;
 
 namespace TestApplication.Infrastucture
 {
     public class ApplicationDbContext : DbContext
     {
-        private const string DATABASE = "Database";
-        private readonly IConfiguration configuration;
-
         public DbSet<Item> Items { get; set; }
-
         public DbSet<Category> Categories { get; set; }
+
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+            : base(options)
+        {
+        }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseNpgsql(configuration.GetConnectionString(DATABASE));
-            optionsBuilder.UseSnakeCaseNamingConvention();
-            optionsBuilder.UseLoggerFactory(CreateLoggerFactory());
+            if (!optionsBuilder.IsConfigured)
+            {
+                optionsBuilder.UseSnakeCaseNamingConvention();
+                optionsBuilder.UseLoggerFactory(CreateLoggerFactory());
+            }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -29,13 +32,23 @@ namespace TestApplication.Infrastucture
         private ILoggerFactory CreateLoggerFactory() =>
             LoggerFactory.Create(builder => { builder.AddConsole(); });
 
-
-        public ApplicationDbContext(IConfiguration _configuration) 
+        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
         {
-            configuration = _configuration;
+            var entries = ChangeTracker.Entries<ITimeEntity>();
+
+            foreach (var entry in entries)
+            {
+                if (entry.State is EntityState.Added)
+                {
+                    entry.Entity.UpdateCreatedTime() ;
+                }
+                else if (entry.State is EntityState.Modified)
+                {
+                    entry.Entity.UpdateUpdatedTime();
+                }
+            }
+
+            return await base.SaveChangesAsync(cancellationToken);
         }
-
-
-
     }
 }
