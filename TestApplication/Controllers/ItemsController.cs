@@ -34,7 +34,8 @@ namespace TestApplication.API.Controllers
         public async Task<IActionResult> GetById([FromRoute] Guid id, CancellationToken ct = default)
         {
             var item = await _repository.GetById(id, ct);
-            return Ok(item);
+            if (item.IsFailure) return NotFound(item.Error);
+            return Ok(item.Value);
         }
 
         [HttpGet("category/")]
