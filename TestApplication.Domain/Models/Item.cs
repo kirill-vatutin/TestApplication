@@ -3,9 +3,9 @@ using TestApplication.Domain.Shared;
 
 namespace TestApplication.Domain.Models
 {
-    public class Item :ITimeEntity
+    public class Item : ITimeEntity
     {
-        public Guid Id { get;private set; }
+        public Guid Id { get; private set; }
         public string Name { get; private set; } = string.Empty;
         public string Description { get; private set; } = string.Empty;
 
@@ -31,20 +31,20 @@ namespace TestApplication.Domain.Models
         }
 
         //EF Core
-        private Item (){}
-        private Item(Guid id,string name, string description, int price, int count, Guid categoryId)
+        private Item() { }
+        private Item(Guid id, string name, string description, int price, int count, Guid categoryId)
         {
-            Id= id;
+            Id = id;
             Name = name;
             Description = description;
             Price = price;
             Count = count;
             CategoryId = categoryId;
-            UpdatedTime = null; 
+            UpdatedTime = null;
         }
 
 
-        public static Result<Item>Create(Guid id,string name, string description, int price, int count, Guid categoryId)
+        public static Result<Item> Create(Guid id, string name, string description, int price, int count, Guid categoryId)
         {
             if (string.IsNullOrWhiteSpace(name))
             {
@@ -54,7 +54,7 @@ namespace TestApplication.Domain.Models
             {
                 return Result.Failure<Item>("Name can not be empty");
             }
-            if (price<0)
+            if (price < 0)
             {
                 return Result.Failure<Item>("Price can not be less than 0");
             }
@@ -63,7 +63,7 @@ namespace TestApplication.Domain.Models
                 return Result.Failure<Item>("Count can not be less than 0");
             }
 
-            var item = new Item(id,name, description, price, count, categoryId);
+            var item = new Item(id, name, description, price, count, categoryId);
             return item;
         }
 

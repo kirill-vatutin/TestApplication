@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using TestApplication.Infrastructure.Repositories;
 using TestApplication.Infrastucture;
 
@@ -16,9 +15,9 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
-    options.UseNpgsql(builder.Configuration.GetConnectionString("Database")); 
+    options.UseNpgsql(builder.Configuration.GetConnectionString("Database"));
 });
-builder.Services.AddScoped<IItemRepository,ItemRepository>();
+builder.Services.AddScoped<IItemRepository, ItemRepository>();
 var app = builder.Build();
 
 

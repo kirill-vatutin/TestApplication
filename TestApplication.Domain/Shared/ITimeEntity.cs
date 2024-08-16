@@ -2,9 +2,9 @@
 {
     public interface ITimeEntity
     {
-        DateTime CreatedTime { get;  }
+        DateTime CreatedTime { get; }
 
-        DateTime? UpdatedTime { get;  }
+        DateTime? UpdatedTime { get; }
 
         void UpdateCreatedTime();
         void UpdateUpdatedTime();

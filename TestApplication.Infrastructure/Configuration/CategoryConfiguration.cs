@@ -22,7 +22,7 @@ namespace TestApplication.Infrastucture.Configuration
                 .HasMaxLength(Constants.MAX_LONG_LENGTH);
 
             builder.HasData(
-                 Category.Create(Guid.NewGuid(),"Фрукты", "Свежие фрукты всех видов").Value,
+                 Category.Create(Guid.NewGuid(), "Фрукты", "Свежие фрукты всех видов").Value,
                  Category.Create(Guid.NewGuid(), "Овощи", "Разнообразные овощи для вашего стола").Value,
                  Category.Create(Guid.NewGuid(), "Молочные продукты", "Молоко, сыр, йогурты и другие молочные изделия").Value,
                  Category.Create(Guid.NewGuid(), "Мясные изделия", "Свежие мясные продукты: говядина, свинина, птица").Value,

@@ -40,7 +40,7 @@ namespace TestApplication.Infrastucture
             {
                 if (entry.State is EntityState.Added)
                 {
-                    entry.Entity.UpdateCreatedTime() ;
+                    entry.Entity.UpdateCreatedTime();
                 }
                 else if (entry.State is EntityState.Modified)
                 {
