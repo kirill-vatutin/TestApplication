@@ -25,7 +25,7 @@ public class ItemsController : ApplicationController
         return File(fileContent, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "MyData.xlsx");
     }
 
-    [HttpGet("items")]
+    [HttpGet]
     public async Task<ActionResult<IReadOnlyList<Item>>> GetAll(
         [FromServices] GetItemsHandler handler,
         CancellationToken cancellationToken)
