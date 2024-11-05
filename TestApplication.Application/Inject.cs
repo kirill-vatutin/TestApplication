@@ -21,7 +21,6 @@ public static class Inject
 
         services.AddScoped<UpdateMainInfoHandler>();
 
-
         services.AddValidatorsFromAssembly(typeof(Inject).Assembly);
 
         return services;

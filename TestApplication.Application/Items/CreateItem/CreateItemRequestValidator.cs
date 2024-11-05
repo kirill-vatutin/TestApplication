@@ -22,7 +22,7 @@ public class CreateItemRequestValidator : AbstractValidator<CreateItemRequest>
 
         RuleFor(i => i.Price)
             .GreaterThan(0)
-            .WithError(Error.Validation("item.price.too_low", "Price must be greater than 0"));
+            .WithError(Errors.General.ValueIsInvalid());
 
         RuleFor(i => i.Count)
             .NotNull()
@@ -32,6 +32,6 @@ public class CreateItemRequestValidator : AbstractValidator<CreateItemRequest>
 
         RuleFor(i => i.CategoryId)
             .NotEmpty()
-            .WithError(Error.Validation("item.category_id.required", "Category ID is required"));
+            .WithError(Errors.General.ValueIsInvalid());
     }
 }

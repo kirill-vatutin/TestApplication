@@ -9,7 +9,7 @@ using TestApplication.Application.Items.GetItems;
 using TestApplication.Application.Items.GetItemsExcel;
 using TestApplication.Application.Items.UpdateMainInfo;
 using TestApplication.Domain.Models.Entities;
-using TestApplication.Domain.Shared;
+
 namespace TestApplication.API.Controllers;
 
 public class ItemsController : ApplicationController
@@ -87,26 +87,4 @@ public class ItemsController : ApplicationController
 
         return Ok(result.Value);
     }
-
-    //[HttpGet]
-    //public async Task<IActionResult> Get(CancellationToken ct = default)
-    //{
-    //    var items = await _repository.Get(ct);
-    //    return Ok(items);
-    //}
-
-    //[HttpGet("{id:guid}")]
-    //public async Task<IActionResult> GetById([FromRoute] Guid id, CancellationToken ct = default)
-    //{
-    //    var item = await _repository.GetById(id, ct);
-    //    if (item.IsFailure) return NotFound(item.Error);
-    //    return Ok(item.Value);
-    //}
-
-    //[HttpGet("category/")]
-    //public async Task<IActionResult> GetByCategory([FromQuery] Guid id, CancellationToken ct = default)
-    //{
-    //    var items = await _repository.GetByCategory(id, ct);
-    //    return Ok(items);
-    //}
 }

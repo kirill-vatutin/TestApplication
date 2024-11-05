@@ -4,7 +4,6 @@ public record Error
 {
     public const string SEPARATOR = "||";
 
-
     public string Code { get; } = string.Empty;
     public string Message { get; }
 
