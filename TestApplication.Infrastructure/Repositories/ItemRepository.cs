@@ -1,81 +1,83 @@
 ﻿using CSharpFunctionalExtensions;
+using Items.CreateItem;
 using Microsoft.EntityFrameworkCore;
-using TestApplication.Application.DTO;
-using TestApplication.Domain.Models;
-using TestApplication.Infrastucture;
+using TestApplication.Application.IRepositories;
+using TestApplication.Application.Response;
+using TestApplication.Domain.Models.Entities;
+using TestApplication.Domain.Models.ValueObjects;
+using TestApplication.Domain.Shared;
 
+namespace TestApplication.Infrastructure.Repositories;
 
-namespace TestApplication.Infrastructure.Repositories
+public class ItemRepository(ApplicationDbContext context) : IItemRepository
 {
-    public class ItemRepository : IItemRepository
+    private readonly ApplicationDbContext _context = context;
+
+    public async Task<Result<Item>> GetById(Guid id, CancellationToken ct = default)
     {
-        private readonly ApplicationDbContext _context;
+        var item = await _context.Items
+                    .Include(i => i.Category)
+                    .FirstOrDefaultAsync(i => i.Id == id, cancellationToken: ct);
+        if (item is null) return Result.Failure<Item>($"Not found {id}");
+        return item;
+    }
 
-        public ItemRepository(ApplicationDbContext context)
+    public async Task<Result<Item, Error>> GetById(ItemId itemId)
+    {
+        var item = await _context.Items
+            .FirstOrDefaultAsync(i => i.Id == itemId);
+
+        if (item is null)
         {
-            _context = context;
+            return Errors.General.NotFound(itemId);
         }
 
-        public async Task<Result<Item>> Save(CreateItemRequest request, CancellationToken ct = default)
-        {
-            var result =  Item.Create(Guid.NewGuid()
-                                  , request.Name
-                                  , request.Description
-                                  , request.Price
-                                  , request.Count
-                                  , request.CategoryId);
-            if (result.IsFailure) return result;
-            var item = result.Value;
-            _context.Items.Add(item);
-            await _context.SaveChangesAsync();
-            return result;
-        }
+        return item;
+    }
 
-        public async Task<IEnumerable<ItemResponse>> Get(CancellationToken ct)
-        {
-            var items = await _context.Items.AsNoTracking()
-                .Include(i=>i.Category)
-                .ToListAsync();
-            return items.Select(i => new ItemResponse
-            {
-                Id = i.Id,
-                Name = i.Name,
-                Description = i.Description,
-                Price = i.Price,
-                Count = i.Count,
-                Category = i.Category.Name
-            });
-            
+    public async Task<Guid> Delete(Item item, CancellationToken cancellationToken)
+    {
+        _context.Items.Remove(item);
+        await _context.SaveChangesAsync(cancellationToken);
 
-        }
+        return item.Id;
+    }
 
-        public async Task<Result<Item>> GetById(Guid id, CancellationToken ct)
-        {
-            var item = await _context.Items
-                        .AsNoTracking()
-                        .Include(i => i.Category)
-                        .FirstOrDefaultAsync(i => i.Id == id, cancellationToken: ct);
-            if (item is null) return Result.Failure<Item>($"Not found {id}");
-            return item;
-        }
+    public async Task<Guid> Add(Item item, CancellationToken cancellationToken)
+    {
+        await _context.Items.AddAsync(item, cancellationToken);
+        await _context.SaveChangesAsync(cancellationToken);
 
-        public async Task<IEnumerable<ItemResponse>> GetByCategory(Guid categoryId, CancellationToken ct)
-        {
-            IQueryable<Item> itemsQuery = _context.Items;
-            var items = await itemsQuery
-                .AsNoTracking()
-                .Where(i => i.CategoryId == categoryId)
-                .Include(i => i.Category)
-                .ToListAsync();
-            return items.Select(i => new ItemResponse
-            {
-                Id = i.Id,
-                Name = i.Name,
-                Description = i.Description,
-                Price = i.Price,
-                Count = i.Count,
-                Category = i.Category.Name
-            });
-        }
+        return item.Id;
+    }
+
+    public async Task<Guid> SaveAsync(Item item, CancellationToken cancellationToken)
+    {
+        _context.Items.Attach(item);
+        await _context.SaveChangesAsync(cancellationToken);
+
+        return item.Id.Value;
+    }
+
+    public async Task<IReadOnlyList<ItemResponse>> GetAll(CancellationToken cancellationToken)
+    {
+        var itemsResponse = await _context.Items
+            .AsNoTracking()
+            .Include(i => i.Category)
+            .Select(
+                item =>
+                    new ItemResponse(
+                        item.Id,
+                        item.Name,
+                        item.Description,
+                        item.Price,
+                        item.Count,
+                        item.Category!.Name,
+                        item.CreatedTime,
+                        item.UpdatedTime
+                        )
+                ).ToListAsync(cancellationToken);
+
+        return itemsResponse;
     }
 }

@@ -1,12 +1,10 @@
-﻿namespace TestApplication.Domain.Shared
+﻿namespace TestApplication.Domain.Shared;
+
+public interface ITimeEntity
 {
-    public interface ITimeEntity
-    {
-        DateTime CreatedTime { get; }
+    DateTime CreatedTime { get; }
+    DateTime? UpdatedTime { get; }
 
-        DateTime? UpdatedTime { get; }
-
-        void UpdateCreatedTime();
-        void UpdateUpdatedTime();
-    }
+    void UpdateCreatedTime();
+    void UpdateUpdatedTime();
 }

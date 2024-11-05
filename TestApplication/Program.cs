@@ -1,30 +1,52 @@
 using Microsoft.EntityFrameworkCore;
-using TestApplication.Infrastructure.Repositories;
-using TestApplication.Infrastucture;
-
-
+using Serilog;
+using Serilog.Events;
+using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
+using TestApplication.API.Extensions;
+using TestApplication.API.Middlewares;
+using TestApplication.API.Validation;
+using TestApplication.Application;
+using TestApplication.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
+var services = builder.Services;
+var configuration = builder.Configuration;
 
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.Console()
+    .WriteTo.Seq(configuration.GetConnectionString("Seq")
+                 ?? throw new ArgumentNullException("Seq"))
+    .Enrich.WithEnvironmentUserName()
+    .Enrich.WithThreadName()
+    .MinimumLevel.Override("Microsoft.AspNetCore.Hosting", LogEventLevel.Warning)
+    .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
+    .MinimumLevel.Override("Microsoft.AspNetCore.Routing", LogEventLevel.Warning)
+    .CreateLogger();
 
+services.AddControllers();
+services.AddEndpointsApiExplorer();
+services.AddSwaggerGen();
 
+services.AddSerilog();
 
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+services.AddApplication();
+services.AddInfrastructure(configuration);
 
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
+services.AddFluentValidationAutoValidation(configuration =>
 {
-    options.UseNpgsql(builder.Configuration.GetConnectionString("Database"));
+    configuration.OverrideDefaultResultFactoryWith<CustomResultFactory>();
 });
-builder.Services.AddScoped<IItemRepository, ItemRepository>();
+
 var app = builder.Build();
 
+app.UseExceptionMiddleware();
 
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+
+    await app.ApplyMigration();
 }
 
 app.UseHttpsRedirection();

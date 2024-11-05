@@ -5,15 +5,15 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using TestApplication.Infrastucture;
+using TestApplication.Infrastructure;
 
 #nullable disable
 
 namespace TestApplication.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240815183909_Initial")]
-    partial class Initial
+    [Migration("20241031083415_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -48,6 +48,68 @@ namespace TestApplication.Infrastructure.Migrations
                         .HasName("pk_category");
 
                     b.ToTable("category", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("fa212a60-0318-4a01-b1a4-88a1eaa07410"),
+                            Description = "Свежие фрукты всех видов",
+                            Name = "Фрукты"
+                        },
+                        new
+                        {
+                            Id = new Guid("18bcbd45-eff1-4118-83ac-0749aac10df6"),
+                            Description = "Разнообразные овощи для вашего стола",
+                            Name = "Овощи"
+                        },
+                        new
+                        {
+                            Id = new Guid("cd369604-f1e7-4878-abab-b6b23dc7e927"),
+                            Description = "Молоко, сыр, йогурты и другие молочные изделия",
+                            Name = "Молочные продукты"
+                        },
+                        new
+                        {
+                            Id = new Guid("025814bb-38b5-4880-aa1d-6596e4ac8c77"),
+                            Description = "Свежие мясные продукты: говядина, свинина, птица",
+                            Name = "Мясные изделия"
+                        },
+                        new
+                        {
+                            Id = new Guid("ade1ec60-4480-4b29-8651-bac031a71d72"),
+                            Description = "Замороженные овощи, фрукты и готовые блюда",
+                            Name = "Замороженные продукты"
+                        },
+                        new
+                        {
+                            Id = new Guid("3da06e0f-e9af-4a20-aa2f-0faa4494ec92"),
+                            Description = "Шоколад, печенье, торты и сладости",
+                            Name = "Кондитерские изделия"
+                        },
+                        new
+                        {
+                            Id = new Guid("2ba89c24-3911-4ed5-82f7-dfa703ed983e"),
+                            Description = "Безалкогольные и алкогольные напитки различных брендов",
+                            Name = "Напитки"
+                        },
+                        new
+                        {
+                            Id = new Guid("4792b989-8bed-474e-9bf0-141ebb64a8ee"),
+                            Description = "Крупы, макароны, консервированные продукты",
+                            Name = "Бакалея"
+                        },
+                        new
+                        {
+                            Id = new Guid("46eb7cf3-0ab6-409d-a5ce-c64c9740ea8f"),
+                            Description = "Продукты для вегетарианцев и людей с особыми диетами",
+                            Name = "Здоровое питание"
+                        },
+                        new
+                        {
+                            Id = new Guid("9f3bbe21-2c17-4b79-930a-5338b0003e75"),
+                            Description = "Товары для дома: моющие средства, упаковка и прочее",
+                            Name = "Хозяйственные товары"
+                        });
                 });
 
             modelBuilder.Entity("TestApplication.Domain.Models.Item", b =>

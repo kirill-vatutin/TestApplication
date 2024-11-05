@@ -1,16 +1,16 @@
 ﻿using CSharpFunctionalExtensions;
-using TestApplication.Application.DTO;
-using TestApplication.Domain.Models;
+using TestApplication.Application.Response;
+using TestApplication.Domain.Models.Entities;
 
-namespace TestApplication.Infrastructure.Repositories
+namespace TestApplication.Application.IRepositories;
+
+public interface IItemRepository
 {
-    public interface IItemRepository
-    {
-
-        Task<Result<Item>> Save(CreateItemRequest request, CancellationToken ct);
-        Task<IEnumerable<ItemResponse>> Get(CancellationToken ct);
-        Task<IEnumerable<ItemResponse>> GetByCategory(Guid categoryId, CancellationToken ct);
-        Task<Result<Item>> GetById(Guid id, CancellationToken ct);
-        
-    }
+    //Task<IEnumerable<ItemResponse>> Get(CancellationToken ct);
+    //Task<IEnumerable<ItemResponse>> GetByCategory(Guid categoryId, CancellationToken ct);
+    Task<Result<Item>> GetById(Guid id, CancellationToken cancellationToken = default);
+    Task<Guid> Delete(Item itemm, CancellationToken cancellationToken = default);
+    Task<Guid> Add(Item item, CancellationToken cancellationToken = default);
+    Task<Guid> SaveAsync(Item item, CancellationToken cancellationToken = default);
+    Task<IReadOnlyList<ItemResponse>> GetAll(CancellationToken cancellationToken = default);
 }

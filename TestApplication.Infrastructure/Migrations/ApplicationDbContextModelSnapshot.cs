@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using TestApplication.Infrastucture;
+using TestApplication.Infrastructure;
 
 #nullable disable
 
@@ -26,80 +26,84 @@ namespace TestApplication.Infrastructure.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
 
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(2000)
-                        .HasColumnType("character varying(2000)");
+                        .HasColumnType("character varying(2000)")
+                        .HasColumnName("description");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("name");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_category");
 
                     b.ToTable("category", (string)null);
 
                     b.HasData(
                         new
                         {
-                            Id = new Guid("e0a84c98-896b-4690-b04f-c5db3dfbe238"),
+                            Id = new Guid("fa212a60-0318-4a01-b1a4-88a1eaa07410"),
                             Description = "Свежие фрукты всех видов",
                             Name = "Фрукты"
                         },
                         new
                         {
-                            Id = new Guid("8e328186-ebd1-48a7-afe7-8c52a3c59707"),
+                            Id = new Guid("18bcbd45-eff1-4118-83ac-0749aac10df6"),
                             Description = "Разнообразные овощи для вашего стола",
                             Name = "Овощи"
                         },
                         new
                         {
-                            Id = new Guid("73c51031-2e4c-4c14-8e3d-d2c10749bc37"),
+                            Id = new Guid("cd369604-f1e7-4878-abab-b6b23dc7e927"),
                             Description = "Молоко, сыр, йогурты и другие молочные изделия",
                             Name = "Молочные продукты"
                         },
                         new
                         {
-                            Id = new Guid("f1345d4c-be75-4ab1-bb8c-d8c78026f409"),
+                            Id = new Guid("025814bb-38b5-4880-aa1d-6596e4ac8c77"),
                             Description = "Свежие мясные продукты: говядина, свинина, птица",
                             Name = "Мясные изделия"
                         },
                         new
                         {
-                            Id = new Guid("32e43954-c09a-43e0-b645-f830b9b7ae80"),
+                            Id = new Guid("ade1ec60-4480-4b29-8651-bac031a71d72"),
                             Description = "Замороженные овощи, фрукты и готовые блюда",
                             Name = "Замороженные продукты"
                         },
                         new
                         {
-                            Id = new Guid("40a6044e-9d25-4c45-864c-e92e323e1749"),
+                            Id = new Guid("3da06e0f-e9af-4a20-aa2f-0faa4494ec92"),
                             Description = "Шоколад, печенье, торты и сладости",
                             Name = "Кондитерские изделия"
                         },
                         new
                         {
-                            Id = new Guid("5f275912-661e-4c03-8fa4-dc503f8e7a6d"),
+                            Id = new Guid("2ba89c24-3911-4ed5-82f7-dfa703ed983e"),
                             Description = "Безалкогольные и алкогольные напитки различных брендов",
                             Name = "Напитки"
                         },
                         new
                         {
-                            Id = new Guid("9212d152-8963-4061-918a-76e855726282"),
+                            Id = new Guid("4792b989-8bed-474e-9bf0-141ebb64a8ee"),
                             Description = "Крупы, макароны, консервированные продукты",
                             Name = "Бакалея"
                         },
                         new
                         {
-                            Id = new Guid("2fdcf39c-8045-4c34-b75b-00ac789f1f32"),
+                            Id = new Guid("46eb7cf3-0ab6-409d-a5ce-c64c9740ea8f"),
                             Description = "Продукты для вегетарианцев и людей с особыми диетами",
                             Name = "Здоровое питание"
                         },
                         new
                         {
-                            Id = new Guid("229683b2-153f-4736-84e0-8959e6f4acbf"),
+                            Id = new Guid("9f3bbe21-2c17-4b79-930a-5338b0003e75"),
                             Description = "Товары для дома: моющие средства, упаковка и прочее",
                             Name = "Хозяйственные товары"
                         });
@@ -109,36 +113,46 @@ namespace TestApplication.Infrastructure.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
 
                     b.Property<Guid>("CategoryId")
-                        .HasColumnType("uuid");
+                        .HasColumnType("uuid")
+                        .HasColumnName("category_id");
 
                     b.Property<int>("Count")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("count");
 
                     b.Property<DateTime>("CreatedTime")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_time");
 
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(2000)
-                        .HasColumnType("character varying(2000)");
+                        .HasColumnType("character varying(2000)")
+                        .HasColumnName("description");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("name");
 
                     b.Property<int>("Price")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("price");
 
                     b.Property<DateTime?>("UpdatedTime")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_time");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_items");
 
-                    b.HasIndex("CategoryId");
+                    b.HasIndex("CategoryId")
+                        .HasDatabaseName("ix_items_category_id");
 
                     b.ToTable("items", (string)null);
                 });
@@ -149,7 +163,8 @@ namespace TestApplication.Infrastructure.Migrations
                         .WithMany("Items")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk_items_categories_category_id");
 
                     b.Navigation("Category");
                 });
